@@ -1,0 +1,28 @@
+
+.missile {
+    position:absolute;
+}
+.ovni { 
+    position:absolute;
+}
+.score {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 70px;
+    height: 35px;
+    background-color: #CCFF00;
+    color: rgba(200,200,255,1);
+    font-weight: 500;
+    text-align: center;
+    font-size: 16pt;
+}
+.space--container {
+    background-image: url('../src/space/space.gif');
+    height: 100vh;
+}
+@media (max-width: 767px) {
+    .space--container {
+        height: calc(100vh - 80px);
+    }
+}
