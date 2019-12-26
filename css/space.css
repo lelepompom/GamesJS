@@ -18,7 +18,7 @@
     font-size: 16pt;
 }
 .space--container {
-    background-image: url('../src/space/space.gif');
+    background-image: url('../img/space/space.gif');
     height: 100vh;
 }
 @media (max-width: 767px) {
