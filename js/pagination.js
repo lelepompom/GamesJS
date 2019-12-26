@@ -1,24 +1,24 @@
 $().ready(() => {
-    $('.tab-pane').load('../pages/hello-world.html');
+    $('.tab-pane').load('../hello-world.html');
 
     $('#v-pills-hello-world-tab').click(() => {
-        $('.tab-pane').load('../pages/hello-world.html');
+        $('.tab-pane').load('../hello-world.html');
     });
 
     $('#v-pills-space-tab').click(() => {
-        $('.tab-pane').load('../pages/space.html');
+        $('.tab-pane').load('../space.html');
     });
 
     $('#v-pills-memory-tab').click(() => {
-        $('.tab-pane').load('../pages/memory.html');
+        $('.tab-pane').load('../memory.html');
     });
 
     $('#v-pills-snake-tab').click(() => {
-        $('.tab-pane').load('../pages/snake.html');
+        $('.tab-pane').load('../snake.html');
     });
 
     $('#v-pills-tic-tac-toe-tab').click(() => {
-        $('.tab-pane').load('../pages/tic-tac-toe.html');
+        $('.tab-pane').load('../tic-tac-toe.html');
     });
 
 });
