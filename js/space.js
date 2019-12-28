@@ -10,6 +10,7 @@ var shootIntervalID;
 
 function moveOvni() {
     ovniEl = document.getElementById('ovni');
+    missileEl = document.getElementById('missile');
     if (!ovniEl) {
         clearInterval(ovniIntervalID);
     }
@@ -22,23 +23,22 @@ function moveOvni() {
 }
 
 function moveMissile(key) {
-    missileEl = document.getElementById('missile');
     var leftPosition;
     switch (key.key) {
         case 'ArrowRight':
             leftPosition = parseInt(missileEl.style.left) + missileStep;
             missileEl.style.left = leftPosition < gameWidth ? `${leftPosition}px` : `${gameWidth}px`;
-        break;
-        case 'ArrowLeft':            
+            break;
+            case 'ArrowLeft':            
             leftPosition = parseInt(missileEl.style.left) - missileStep;
             missileEl.style.left = leftPosition > 0 ? `${leftPosition}px` : `${0}px`;
-        break;
-        default:
-            shootIntervalID = setInterval(shoot, 10);
-        break;
-    }
-}
-
+            break;
+            default:
+                shootIntervalID = setInterval(shoot, 10);
+                break;
+            }
+        }
+        
 function shoot() {
     var bottomPosition = parseInt(missileEl.style.bottom) + 10;
     missileEl.style.bottom = `${bottomPosition}px`;
@@ -48,8 +48,18 @@ function shoot() {
     if (hasCrashed()){
         score += 100;
         document.getElementById('score').innerHTML = score;
+        ovniEl.src = ovniEl.src.replace('ovni', 'crash');
+        clearInterval(ovniIntervalID);
+        resetOvni();
         resetMissile();
     }
+}
+
+function resetOvni() {
+    setTimeout(() => { 
+        ovniEl.src = ovniEl.src.replace('crash', 'ovni');
+        ovniIntervalID = setInterval(moveOvni, 10);
+    }, 500);
 }
 
 function resetMissile() {
@@ -65,7 +75,7 @@ function hasCrashed() {
     var ovniLeft = parseInt(ovniEl.style.left);
     var ovniRight = parseInt(ovniEl.style.left) + parseInt(ovniEl.style.width);
 
-    if (missileTop > ovniBottom && ((missileRight > ovniLeft && missileRight < ovniRight) || (missileLeft > ovniLeft && missileLeft > ovniRight))) {
+    if (missileTop > ovniBottom && ((missileRight > ovniLeft && missileRight < ovniRight) || (missileLeft > ovniLeft && missileLeft < ovniRight))) {
         return true;
     } else {
         return false;
@@ -75,6 +85,10 @@ function hasCrashed() {
 $().ready(() => {
     gameWidth = document.querySelector('.tab-pane').offsetWidth;
     gameHeight = document.querySelector('.tab-pane').offsetHeight;
-    document.onkeyup = moveMissile;
+    if (gameWidth && gameWidth > 767) {
+        document.onkeyup = moveMissile;
+    } else {
+        document.ontouchstart = moveMissile;
+    }
     ovniIntervalID = setInterval(moveOvni, 10);
 });

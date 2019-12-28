@@ -17,12 +17,13 @@
     text-align: center;
     font-size: 16pt;
 }
-.space--container {
+.space--canvas {
     background-image: url('../img/space/space.gif');
     height: 100vh;
+    position: fixed;
 }
 @media (max-width: 767px) {
-    .space--container {
+    .space--canvas {
         height: calc(100vh - 80px);
     }
 }
