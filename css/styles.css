@@ -30,6 +30,18 @@ a, a:hover {
 .tab-pane {
     height: 100vh;
 }
+.hello--container {
+    background-image: url('../img/hithere.gif');
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
 @media (min-width: 768px) {
     .nav-pills .nav-link.active {
         width: 100%;
@@ -52,6 +64,9 @@ a, a:hover {
         text-align: center;
     }
     .tab-pane {
+        height: calc(100vh - 80px);
+    }
+    .hello--container {
         height: calc(100vh - 80px);
     }
 }
