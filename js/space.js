@@ -1,55 +1,51 @@
 var gameWidth;
 var gameHeight;
-var missileEl;
+var gameScoreEl;
 var ovniEl;
-var missileStep = 10;
-var ovniStep = 3;
-var score = 0;
+var ovniStep;
 var ovniIntervalID;
-var shootIntervalID;
+var missileEl;
+var missileStep;
+var missileShootIntervalID;
 
-function moveOvni() {
-    ovniEl = document.getElementById('ovni');
-    missileEl = document.getElementById('missile');
-    if (!ovniEl) {
-        clearInterval(ovniIntervalID);
-    }
-    var ovniPosition = parseInt(ovniEl.style.left);
-    if ((ovniPosition + ovniStep) > (gameWidth - parseInt(ovniEl.style.width)) || ovniPosition < 0) {
+function launchOvni() {
+    var ovniLeft = parseInt(ovniEl.style.left);
+    if ((ovniLeft + ovniStep) > (gameWidth - parseInt(ovniEl.style.width)) || ovniLeft < 0) {
         ovniStep = - ovniStep;
     }
-    ovniPosition = ovniPosition + ovniStep;
-    ovniEl.style.left = `${ovniPosition}px`;
+    ovniLeft += ovniStep;
+    ovniEl.style.left = `${ovniLeft}px`;
 }
 
-function moveMissile(key) {
+function moveMissile(event) {
     var leftPosition;
-    switch (key.key) {
+    switch (event.key) {
         case 'ArrowRight':
             leftPosition = parseInt(missileEl.style.left) + missileStep;
             missileEl.style.left = leftPosition < gameWidth ? `${leftPosition}px` : `${gameWidth}px`;
-            break;
-            case 'ArrowLeft':            
+        break;
+        case 'ArrowLeft':            
             leftPosition = parseInt(missileEl.style.left) - missileStep;
             missileEl.style.left = leftPosition > 0 ? `${leftPosition}px` : `${0}px`;
-            break;
-            default:
-                shootIntervalID = setInterval(shoot, 10);
-                break;
+        break;
+        default:
+            if (parseInt(missileEl.style.bottom) <= 10) {
+                missileShootIntervalID = setInterval(shootMissile, 10);
             }
-        }
+        break;
+    }
+}
         
-function shoot() {
-    var bottomPosition = parseInt(missileEl.style.bottom) + 10;
-    missileEl.style.bottom = `${bottomPosition}px`;
-    if (bottomPosition > gameHeight) {
+function shootMissile() {
+    var missileBottom = parseInt(missileEl.style.bottom) + missileStep;
+    missileEl.style.bottom = `${missileBottom}px`;
+    if (missileBottom > gameHeight) {
         resetMissile();
     }
     if (hasCrashed()){
-        score += 100;
-        document.getElementById('score').innerHTML = score;
-        ovniEl.src = ovniEl.src.replace('ovni', 'crash');
+        gameScoreEl.innerHTML = parseInt(gameScoreEl.innerHTML) + 100;
         clearInterval(ovniIntervalID);
+        ovniEl.src = ovniEl.src.replace('ovni', 'crash');
         resetOvni();
         resetMissile();
     }
@@ -58,13 +54,14 @@ function shoot() {
 function resetOvni() {
     setTimeout(() => { 
         ovniEl.src = ovniEl.src.replace('crash', 'ovni');
-        ovniIntervalID = setInterval(moveOvni, 10);
+        ovniIntervalID = setInterval(launchOvni, 10);
     }, 500);
 }
 
 function resetMissile() {
-    clearInterval(shootIntervalID);
-    missileEl.style.bottom = `${0}px`;
+    clearInterval(missileShootIntervalID);
+    missileEl.style.bottom = `${10}px`;
+    initMissileMovementEvent();
 }
 
 function hasCrashed() {
@@ -82,13 +79,42 @@ function hasCrashed() {
     }
 }
 
-$().ready(() => {
-    gameWidth = document.querySelector('.tab-pane').offsetWidth;
-    gameHeight = document.querySelector('.tab-pane').offsetHeight;
-    if (gameWidth && gameWidth > 767) {
-        document.onkeyup = moveMissile;
-    } else {
+function isMobile() {
+    return window.innerWidth < 768 ? true : false;
+}
+
+function initMissileMovementEvent() {
+    if (isMobile()) {
         document.ontouchstart = moveMissile;
+    } else {
+        document.onkeydown = moveMissile;
     }
-    ovniIntervalID = setInterval(moveOvni, 10);
+}
+
+function setUpGame() {
+    gameWidth = $('.tab-pane')[0].offsetWidth;
+    gameHeight = $('.tab-pane')[0].offsetHeight;
+    gameScoreEl = $('#score')[0];
+    gameScoreEl.innerHTML = 0;
+}
+
+function setUpOvni() {
+    ovniEl = document.getElementById('ovni');
+    ovniStep = 3;
+    if (ovniIntervalID) {
+        clearInterval(ovniIntervalID);
+    }
+    ovniIntervalID = setInterval(launchOvni, 10);
+}
+
+function setUpMissile() {    
+    missileEl = document.getElementById('missile');
+    missileStep = 10;
+    initMissileMovementEvent();
+}
+
+$().ready(() => {
+    setUpGame();
+    setUpOvni();
+    setUpMissile();
 });
