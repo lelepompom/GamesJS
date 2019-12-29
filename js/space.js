@@ -40,6 +40,7 @@ function shootMissile() {
     var missileBottom = parseInt(missileEl.style.bottom) + missileStep;
     missileEl.style.bottom = `${missileBottom}px`;
     if (missileBottom > gameHeight) {
+        gameScoreEl.innerHTML = parseInt(gameScoreEl.innerHTML) - 50;
         resetMissile();
     }
     if (hasCrashed()){
